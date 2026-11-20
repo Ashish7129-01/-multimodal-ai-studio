@@ -104,6 +104,12 @@ with text_tab:
     prompt = st.text_area("Enter your prompt")
 
     if st.button("Generate Text"):
+        if prompt.strip():
+            from safety_guard import check_prompt_safety
+            safe, reason = check_prompt_safety(prompt)
+            if not safe:
+                st.error(reason)
+                st.stop()
         if not prompt.strip():
             st.warning("Please enter a prompt.")
         elif not is_safe_prompt(prompt):
